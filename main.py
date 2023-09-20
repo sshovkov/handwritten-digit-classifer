@@ -1,6 +1,8 @@
 import load_mnist
+import numpy as np
+import matplotlib.pyplot as plt
+from PIL import Image
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import mean_absolute_error
 from sklearn.metrics import accuracy_score
 
 # Load the MNIST training data using load_mnist module
@@ -24,8 +26,20 @@ predictions = handwritten_digit_model.predict(test_images)
 
 # Calculate accuracy
 accuracy = accuracy_score(test_labels, predictions)
-print(f"Accuracy: {accuracy * 100:.2f}%")
+print(f"Model Accuracy: {accuracy * 100:.2f}%")
 
-# Calculate mean absolute error
-mae = mean_absolute_error(test_labels, predictions)
-print(f"Mean Absolute Error: {mae:.2f}")
+# Load and process a local image
+image_path = "local_test_image/image_2.jpg"
+img = Image.open(image_path).convert("L")  # Convert to grayscale
+img = img.resize((28, 28))  # Resize to match MNIST image size
+img = np.array(img).reshape(1, -1) / 255.0  # Normalize pixel values and flatten image
+
+# Make prediction on local image
+prediction = handwritten_digit_model.predict(img)
+print(f"Classification of local image: {prediction[0]}")
+
+# Display the local image and prediction
+plt.imshow(img.reshape(28, 28), cmap=plt.cm.gray_r)
+plt.title(f"Predicted Digit: {prediction[0]}")
+plt.axis("off")
+plt.show()
