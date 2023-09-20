@@ -7,7 +7,7 @@ from sklearn.neighbors import KNeighborsClassifier
 
 def main():
     # Load and process a local image (requires black digit on white background)
-    image_path = "local_test_image/image_8.jpg"
+    image_path = "local_test_image/image_3.jpg"
     img = load_and_process_image(image_path)
 
     # Load the MNIST training data
@@ -57,15 +57,16 @@ def scale_image_colors(img: np.ndarray) -> np.ndarray:
 
 def display_results(img, prediction, nearest_neighbor_images):
     """Display the local image, its prediction, and nearest neighbor images."""
-    plt.imshow(img.reshape(28, 28), cmap=plt.cm.gray, vmin=0, vmax=255)
+    # plt.figure(figsize=(10, 5))
+    # plt.subplot(1, 4, 1)
+    plt.imshow(img.reshape(28, 28), cmap=plt.cm.gray)
     plt.title(f"Handwritten\nPredicted Digit: {prediction[0]}")
     plt.axis("off")
 
-    ## Uncomment this section to display nearest neighbor images
-    # plt.figure(figsize=(10, 5))
+    # # Uncomment this section to display nearest neighbor images
     # for i, neighbor_img in enumerate(nearest_neighbor_images):
     #     plt.subplot(1, 4, i + 2)
-    #     plt.imshow(neighbor_img.reshape(28, 28), cmap=plt.cm.gray, vmin=0, vmax=255)
+    #     plt.imshow(neighbor_img.reshape(28, 28), cmap=plt.cm.gray)
     #     plt.title(f"Neighbor {i + 1}")
     #     plt.axis("off")
 
