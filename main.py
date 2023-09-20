@@ -31,6 +31,7 @@ print(f"Model Accuracy: {accuracy * 100:.2f}%")
 # Load and process a local image
 image_path = "local_test_image/image_2.jpg"
 img = Image.open(image_path).convert("L")  # Convert to grayscale
+img = Image.fromarray(255 - np.array(img))  # Invert the colors
 img = img.resize((28, 28))  # Resize to match MNIST image size
 img = np.array(img).reshape(1, -1) / 255.0  # Normalize pixel values and flatten image
 
