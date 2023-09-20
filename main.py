@@ -33,8 +33,7 @@ image_path = "local_test_image/image_3.jpg"
 img = Image.open(image_path).convert("L")  # Convert to grayscale
 img = Image.fromarray(255 - np.array(img))  # Invert the colors
 img = img.resize((28, 28))  # Resize to match MNIST image size
-img = np.array(img).reshape(1, -1)
-print("Image Shape: {}".format(img.shape))
+img = np.array(img).reshape(1, -1)  # (1, -1) for single image
 
 # Make prediction on local image
 prediction = handwritten_digit_model.predict(img)
