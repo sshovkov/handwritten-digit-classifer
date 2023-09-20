@@ -6,8 +6,8 @@ from sklearn.neighbors import KNeighborsClassifier
 
 
 def main():
-    # Load and process a local image
-    image_path = "local_test_image/image_7.jpg"
+    # Load and process a local image (requires black digit on white background)
+    image_path = "local_test_image/image_8.jpg"
     img = load_and_process_image(image_path)
 
     # Load the MNIST training data
@@ -31,29 +31,12 @@ def main():
     # Retrieve the nearest neighbor images
     nearest_neighbor_images = train_images[nearest_neighbors_indices[0]]
 
-    # Display the local image and its nearest neighbors
-    plt.figure(figsize=(10, 5))
-    plt.subplot(1, 4, 1)
-    plt.imshow(img.reshape(28, 28), cmap=plt.cm.gray, vmin=0, vmax=255)
-    plt.title(f"Local Image\nPredicted Digit: {prediction[0]}")
-    plt.axis("off")
-
-    for i, neighbor_index in enumerate(nearest_neighbors_indices[0]):
-        plt.subplot(1, 4, i + 2)
-        plt.imshow(
-            nearest_neighbor_images[i].reshape(28, 28),
-            cmap=plt.cm.gray,
-            vmin=0,
-            vmax=255,
-        )
-        plt.title(f"Neighbor {i + 1}\nTrue Digit: {train_labels[neighbor_index]}")
-        plt.axis("off")
-
-    plt.tight_layout()
-    plt.show()
+    # Display the results
+    display_results(img, prediction, nearest_neighbor_images)
 
 
 def load_and_process_image(image_path: str) -> np.ndarray:
+    """Load the image at the given path and process it for model prediction."""
     img = Image.open(image_path).convert("L")  # Convert to grayscale
     img = Image.fromarray(255 - np.array(img))  # Invert the colors
     img = img.resize((28, 28))  # Resize to match MNIST image size
@@ -67,11 +50,27 @@ def scale_image_colors(img: np.ndarray) -> np.ndarray:
     """
     Scale the colors of an image to be between 0 and 255 for accurate model prediction.
     """
-    numpy_min = np.min(img)
-    numpy_max = np.max(img)
-    numpy_diff = numpy_max - numpy_min
-    img = (img - numpy_min) * (255 / numpy_diff)
+    img_RGB_range = img.max() - img.min()
+    img = (img - img.min()) * (255 / img_RGB_range)
     return img
+
+
+def display_results(img, prediction, nearest_neighbor_images):
+    """Display the local image, its prediction, and nearest neighbor images."""
+    plt.imshow(img.reshape(28, 28), cmap=plt.cm.gray, vmin=0, vmax=255)
+    plt.title(f"Handwritten\nPredicted Digit: {prediction[0]}")
+    plt.axis("off")
+
+    ## Uncomment this section to display nearest neighbor images
+    # plt.figure(figsize=(10, 5))
+    # for i, neighbor_img in enumerate(nearest_neighbor_images):
+    #     plt.subplot(1, 4, i + 2)
+    #     plt.imshow(neighbor_img.reshape(28, 28), cmap=plt.cm.gray, vmin=0, vmax=255)
+    #     plt.title(f"Neighbor {i + 1}")
+    #     plt.axis("off")
+
+    plt.tight_layout()
+    plt.show()
 
 
 if __name__ == "__main__":
